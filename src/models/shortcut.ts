@@ -1,4 +1,4 @@
-import {Table, Column, PrimaryKey, Model, AutoIncrement, Index} from 'sequelize-typescript';
+import {Table, Column, PrimaryKey, Model, AutoIncrement, Index, DataType} from 'sequelize-typescript';
 
 @Table
 export default class Shortcut extends Model<Shortcut> {
@@ -7,9 +7,9 @@ export default class Shortcut extends Model<Shortcut> {
   @Column
   id!: number;
 
-  @Column
+  @Column(DataType.STRING)
   @Index
-  guildId!: string;
+  guildId!: string | null;
 
   @Column
   authorId!: string;
