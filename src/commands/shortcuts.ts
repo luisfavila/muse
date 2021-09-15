@@ -39,7 +39,7 @@ export default class implements Command {
       if (shortcuts.length) {
         res += '**Global**\n';
         res += shortcuts.reduce((accum, shortcut) => {
-          accum += `${prefix}${shortcut.shortcut}: ${shortcut.command}\n`;
+          accum += `\`${prefix}\`${shortcut.shortcut}: ${shortcut.command}\n`;
           return accum;
         }, '');
       }
@@ -47,12 +47,13 @@ export default class implements Command {
       if (guildShortcuts.length) {
         res += '\n**Server**\n';
         res += guildShortcuts.reduce((accum, shortcut) => {
-          accum += `${prefix}${shortcut.shortcut}: ${shortcut.command}\n`;
+          accum += `\`${prefix}\`${shortcut.shortcut}: ${shortcut.command}\n`;
           return accum;
         }, '');
       }
 
-      await msg.channel.send(res);
+      const sent = await msg.channel.send(res);
+      await sent.suppressEmbeds(true);
     } else {
       const action = args[0];
 
