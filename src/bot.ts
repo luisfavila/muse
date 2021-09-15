@@ -63,7 +63,9 @@ export default class {
       const command = args.shift()!.toLowerCase();
 
       // Get possible shortcut
-      const shortcut = await Shortcut.findOne({where: {guildId: msg.guild.id, shortcut: command}});
+      let shortcut =
+        await Shortcut.findOne({where: {guildId: msg.guild.id, shortcut: command}}) ??
+        await Shortcut.findOne({where: {shortcut: command}});
 
       let handler: Command;
 

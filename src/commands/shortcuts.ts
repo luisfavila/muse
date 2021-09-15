@@ -17,28 +17,40 @@ export default class implements Command {
 
   public async execute(msg: Message, args: string []): Promise<void> {
     if (args.length === 0) {
-      // Get shortcuts for guild
-      const shortcuts = await Shortcut.findAll({where: {guildId: msg.guild!.id}});
+      // Get prefix for guild
+      const {prefix} = await Settings.findOne({where: {guildId: msg.guild!.id}}) ?? {prefix: null};
+      if (prefix === null) {
+        return;
+      }
 
-      if (shortcuts.length === 0) {
+      // Get guild shortcuts
+      const guildShortcuts = await Shortcut.findAll({where: {guildId: msg.guild!.id}});
+      const guildShortcutsById: Record<string, Shortcut> = guildShortcuts.reduce((byid, s) => ({...byid, [s.shortcut]: s}), {});
+      // Get global shortcuts
+      const shortcuts = (await Shortcut.findAll({where: {guildId: null}})).filter(s => !guildShortcutsById[s.shortcut]);
+
+      if (shortcuts.length === 0 && guildShortcuts.length === 0) {
         await msg.channel.send('no shortcuts exist');
         return;
       }
 
-      // Get prefix for guild
-      const settings = await Settings.findOne({where: {guildId: msg.guild!.id}});
+      let res = '';
 
-      if (!settings) {
-        return;
+      if (shortcuts.length) {
+        res += '**Global**\n';
+        res += shortcuts.reduce((accum, shortcut) => {
+          accum += `${prefix}${shortcut.shortcut}: ${shortcut.command}\n`;
+          return accum;
+        }, '');
       }
 
-      const {prefix} = settings;
-
-      const res = shortcuts.reduce((accum, shortcut) => {
-        accum += `${prefix}${shortcut.shortcut}: ${shortcut.command}\n`;
-
-        return accum;
-      }, '');
+      if (guildShortcuts.length) {
+        res += '\n**Server**\n';
+        res += guildShortcuts.reduce((accum, shortcut) => {
+          accum += `${prefix}${shortcut.shortcut}: ${shortcut.command}\n`;
+          return accum;
+        }, '');
+      }
 
       await msg.channel.send(res);
     } else {
