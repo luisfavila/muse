@@ -172,7 +172,11 @@ export default class {
       }
     } catch (error: unknown) {
       this.queuePosition--;
-      throw error;
+      if (this.queuePosition < this.queue.length - 1) {
+        await this.forward(1);
+      } else {
+        throw error;
+      }
     }
   }
 
