@@ -1,44 +1,36 @@
 import 'reflect-metadata';
 import {Container} from 'inversify';
-import {TYPES} from './types';
-import Bot from './bot';
+import {TYPES} from './types.js';
+import Bot from './bot.js';
 import {Client} from 'discord.js';
-import YouTube from 'youtube.ts';
-import Spotify from 'spotify-web-api-node';
-import {
-  DISCORD_TOKEN,
-  DISCORD_CLIENT_ID,
-  YOUTUBE_API_KEY,
-  SPOTIFY_CLIENT_ID,
-  SPOTIFY_CLIENT_SECRET,
-  DATA_DIR,
-  CACHE_DIR
-} from './utils/config';
+import ConfigProvider from './services/config.js';
 
 // Managers
-import PlayerManager from './managers/player';
+import PlayerManager from './managers/player.js';
 
 // Helpers
-import GetSongs from './services/get-songs';
-import NaturalLanguage from './services/natural-language-commands';
+import GetSongs from './services/get-songs.js';
+import NaturalLanguage from './services/natural-language-commands.js';
 
 // Comands
 import Command from './commands';
-import Clear from './commands/clear';
-import Config from './commands/config';
-import Disconnect from './commands/disconnect';
-import ForwardSeek from './commands/fseek';
-import Help from './commands/help';
-import Pause from './commands/pause';
-import Play from './commands/play';
-import QueueCommad from './commands/queue';
-import Seek from './commands/seek';
-import Shortcuts from './commands/shortcuts';
-import Shuffle from './commands/shuffle';
-import Skip from './commands/skip';
-import Unskip from './commands/unskip';
+import Clear from './commands/clear.js';
+import Config from './commands/config.js';
+import Disconnect from './commands/disconnect.js';
+import ForwardSeek from './commands/fseek.js';
+import Help from './commands/help.js';
+import Pause from './commands/pause.js';
+import Play from './commands/play.js';
+import QueueCommad from './commands/queue.js';
+import Seek from './commands/seek.js';
+import Shortcuts from './commands/shortcuts.js';
+import Shuffle from './commands/shuffle.js';
+import Skip from './commands/skip.js';
+import Unskip from './commands/unskip.js';
+import ThirdParty from './services/third-party.js';
+import CacheProvider from './services/cache.js';
 
-let container = new Container();
+const container = new Container();
 
 // Bot
 container.bind<Bot>(TYPES.Bot).to(Bot).inSingletonScope();
@@ -65,20 +57,17 @@ container.bind<NaturalLanguage>(TYPES.Services.NaturalLanguage).to(NaturalLangua
   Shortcuts,
   Shuffle,
   Skip,
-  Unskip
+  Unskip,
 ].forEach(command => {
   container.bind<Command>(TYPES.Command).to(command).inSingletonScope();
 });
 
 // Config values
-container.bind<string>(TYPES.Config.DISCORD_TOKEN).toConstantValue(DISCORD_TOKEN);
-container.bind<string>(TYPES.Config.DISCORD_CLIENT_ID).toConstantValue(DISCORD_CLIENT_ID);
-container.bind<string>(TYPES.Config.YOUTUBE_API_KEY).toConstantValue(YOUTUBE_API_KEY);
-container.bind<string>(TYPES.Config.DATA_DIR).toConstantValue(DATA_DIR);
-container.bind<string>(TYPES.Config.CACHE_DIR).toConstantValue(CACHE_DIR);
+container.bind(TYPES.Config).toConstantValue(new ConfigProvider());
 
 // Static libraries
-container.bind<YouTube>(TYPES.Lib.YouTube).toConstantValue(new YouTube(YOUTUBE_API_KEY));
-container.bind<Spotify>(TYPES.Lib.Spotify).toConstantValue(new Spotify({clientId: SPOTIFY_CLIENT_ID, clientSecret: SPOTIFY_CLIENT_SECRET}));
+container.bind(TYPES.ThirdParty).to(ThirdParty);
+
+container.bind(TYPES.Cache).to(CacheProvider);
 
 export default container;

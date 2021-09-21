@@ -1,7 +1,7 @@
 import {TextChannel, Message, GuildChannel} from 'discord.js';
 import {injectable} from 'inversify';
-import {Settings} from '../models';
-import errorMsg from '../utils/error-msg';
+import {Settings} from '../models/index.js';
+import errorMsg from '../utils/error-msg.js';
 import Command from '.';
 
 @injectable()
@@ -10,7 +10,7 @@ export default class implements Command {
   public aliases = [];
   public examples = [
     ['config prefix !', 'set the prefix to !'],
-    ['config channel music-commands', 'bind the bot to the music-commands channel']
+    ['config channel music-commands', 'bind the bot to the music-commands channel'],
   ];
 
   public async execute(msg: Message, args: string []): Promise<void> {
@@ -64,7 +64,7 @@ export default class implements Command {
 
           await Promise.all([
             (channel as TextChannel).send('hey apparently I\'m bound to this channel now'),
-            msg.react('👍')
+            msg.react('👍'),
           ]);
         } else {
           await msg.channel.send(errorMsg('either that channel doesn\'t exist or you want me to become sentient and listen to a voice channel'));

@@ -1,16 +1,16 @@
 import {Message} from 'discord.js';
 import {injectable} from 'inversify';
 import Command from '.';
-import {TYPES} from '../types';
-import {Settings} from '../models';
-import container from '../inversify.config';
+import {TYPES} from '../types.js';
+import {Settings} from '../models/index.js';
+import container from '../inversify.config.js';
 
 @injectable()
 export default class implements Command {
   public name = 'help';
   public aliases = ['h'];
   public examples = [
-    ['help', 'you don\'t need a description']
+    ['help', 'you don\'t need a description'],
   ];
 
   private commands: Command[] = [];

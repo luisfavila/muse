@@ -1,11 +1,11 @@
 import {Message, TextChannel} from 'discord.js';
-import {TYPES} from '../types';
+import {TYPES} from '../types.js';
 import {inject, injectable} from 'inversify';
-import PlayerManager from '../managers/player';
-import LoadingMessage from '../utils/loading-message';
-import errorMsg from '../utils/error-msg';
+import PlayerManager from '../managers/player.js';
+import LoadingMessage from '../utils/loading-message.js';
+import errorMsg from '../utils/error-msg.js';
 import Command from '.';
-import {parseTime} from '../utils/time';
+import {parseTime} from '../utils/time.js';
 
 @injectable()
 export default class implements Command {
@@ -14,7 +14,7 @@ export default class implements Command {
   public examples = [
     ['seek 10', 'seeks to 10 seconds from beginning of song'],
     ['seek 1:30', 'seeks to 1 minute and 30 seconds from beginning of song'],
-    ['seek 1:00:00', 'seeks to 1 hour from beginning of song']
+    ['seek 1:00:00', 'seeks to 1 hour from beginning of song'],
   ];
 
   public requiresVC = true;

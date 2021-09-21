@@ -1,8 +1,8 @@
 import {Message} from 'discord.js';
-import {TYPES} from '../types';
+import {TYPES} from '../types.js';
 import {inject, injectable} from 'inversify';
-import PlayerManager from '../managers/player';
-import errorMsg from '../utils/error-msg';
+import PlayerManager from '../managers/player.js';
+import errorMsg from '../utils/error-msg.js';
 import Command from '.';
 
 @injectable()
@@ -10,7 +10,7 @@ export default class implements Command {
   public name = 'unskip';
   public aliases = ['back'];
   public examples = [
-    ['unskip', 'goes back in the queue by one song']
+    ['unskip', 'goes back in the queue by one song'],
   ];
 
   public requiresVC = true;

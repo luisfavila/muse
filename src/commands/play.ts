@@ -1,14 +1,15 @@
 import {TextChannel, Message} from 'discord.js';
 import {URL} from 'url';
-import {TYPES} from '../types';
+import {Except} from 'type-fest';
+import {TYPES} from '../types.js';
 import {inject, injectable} from 'inversify';
-import {QueuedSong, STATUS} from '../services/player';
-import PlayerManager from '../managers/player';
-import {getMostPopularVoiceChannel, getMemberVoiceChannel} from '../utils/channels';
-import LoadingMessage from '../utils/loading-message';
-import errorMsg from '../utils/error-msg';
+import {QueuedSong, STATUS} from '../services/player.js';
+import PlayerManager from '../managers/player.js';
+import {getMostPopularVoiceChannel, getMemberVoiceChannel} from '../utils/channels.js';
+import LoadingMessage from '../utils/loading-message.js';
+import errorMsg from '../utils/error-msg.js';
 import Command from '.';
-import GetSongs from '../services/get-songs';
+import GetSongs from '../services/get-songs.js';
 
 @injectable()
 export default class implements Command {
@@ -23,7 +24,7 @@ export default class implements Command {
     ['play https://open.spotify.com/album/5dv1oLETxdsYOkS2Sic00z?si=bDa7PaloRx6bMIfKdnvYQw', 'adds all songs from album to the queue'],
     ['play https://open.spotify.com/playlist/37i9dQZF1DX94qaYRnkufr?si=r2fOVL_QQjGxFM5MWb84Xw', 'adds all songs from playlist to the queue'],
     ['play cool music immediate', 'adds the first search result for "cool music" to the front of the queue'],
-    ['play cool music i', 'adds the first search result for "cool music" to the front of the queue']
+    ['play cool music i', 'adds the first search result for "cool music" to the front of the queue'],
   ];
 
   public requiresVC = true;
@@ -68,7 +69,7 @@ export default class implements Command {
 
     const addToFrontOfQueue = args[args.length - 1] === 'i' || args[args.length - 1] === 'immediate';
 
-    const newSongs: QueuedSong[] = [];
+    const newSongs: Array<Except<QueuedSong, 'addedInChannelId'>> = [];
     let extraMsg = '';
 
     // Test if it's a complete URL
@@ -81,7 +82,7 @@ export default class implements Command {
         // YouTube source
         if (url.searchParams.get('list')) {
           // YouTube playlist
-          newSongs.push(...await this.getSongs.youtubePlaylist(url.searchParams.get('list') as string));
+          newSongs.push(...await this.getSongs.youtubePlaylist(url.searchParams.get('list')!));
         } else {
           // Single video
           const song = await this.getSongs.youtubeVideo(url.href);
@@ -123,6 +124,7 @@ export default class implements Command {
       if (song) {
         newSongs.push(song);
       } else {
+        console.log(_);
         await res.stop(errorMsg('that doesn\'t exist'));
         return;
       }
@@ -133,7 +135,9 @@ export default class implements Command {
       return;
     }
 
-    newSongs.forEach(song => player.add(song, {immediate: addToFrontOfQueue}));
+    newSongs.forEach(song => {
+      player.add({...song, addedInChannelId: msg.channel.id}, {immediate: addToFrontOfQueue});
+    });
 
     const firstSong = newSongs[0];
 

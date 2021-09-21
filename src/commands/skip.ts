@@ -1,10 +1,10 @@
 import {Message, TextChannel} from 'discord.js';
-import {TYPES} from '../types';
+import {TYPES} from '../types.js';
 import {inject, injectable} from 'inversify';
-import PlayerManager from '../managers/player';
+import PlayerManager from '../managers/player.js';
 import Command from '.';
-import LoadingMessage from '../utils/loading-message';
-import errorMsg from '../utils/error-msg';
+import LoadingMessage from '../utils/loading-message.js';
+import errorMsg from '../utils/error-msg.js';
 
 @injectable()
 export default class implements Command {
@@ -12,7 +12,7 @@ export default class implements Command {
   public aliases = ['s'];
   public examples = [
     ['skip', 'skips the current song'],
-    ['skip 2', 'skips the next 2 songs']
+    ['skip 2', 'skips the next 2 songs'],
   ];
 
   public requiresVC = true;

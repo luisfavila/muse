@@ -1,8 +1,8 @@
 import {Message} from 'discord.js';
-import {TYPES} from '../types';
+import {TYPES} from '../types.js';
 import {inject, injectable} from 'inversify';
-import PlayerManager from '../managers/player';
-import errorMsg from '../utils/error-msg';
+import PlayerManager from '../managers/player.js';
+import errorMsg from '../utils/error-msg.js';
 import Command from '.';
 
 @injectable()
@@ -10,7 +10,7 @@ export default class implements Command {
   public name = 'disconnect';
   public aliases = ['dc'];
   public examples = [
-    ['disconnect', 'pauses and disconnects player']
+    ['disconnect', 'pauses and disconnects player'],
   ];
 
   public requiresVC = true;

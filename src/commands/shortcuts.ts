@@ -1,7 +1,7 @@
 import {Message} from 'discord.js';
 import {injectable} from 'inversify';
-import {Shortcut, Settings} from '../models';
-import errorMsg from '../utils/error-msg';
+import {Shortcut, Settings} from '../models/index.js';
+import errorMsg from '../utils/error-msg.js';
 import Command from '.';
 
 @injectable()
@@ -12,7 +12,7 @@ export default class implements Command {
     ['shortcuts', 'show all shortcuts'],
     ['shortcuts set s skip', 'aliases `s` to `skip`'],
     ['shortcuts set party play https://www.youtube.com/watch?v=zK6oOJ1wz8k', 'aliases `party` to a specific play command'],
-    ['shortcuts delete party', 'removes the `party` shortcut']
+    ['shortcuts delete party', 'removes the `party` shortcut'],
   ];
 
   public async execute(msg: Message, args: string []): Promise<void> {

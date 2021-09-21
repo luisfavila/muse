@@ -2,19 +2,23 @@
   "name": "muse",
   "version": "0.1.0",
   "description": "🎧 a self-hosted Discord music bot that doesn't suck ",
-  "main": "dist/index.js",
+  "exports": "./dist/index.js",
   "repository": "git@github.com:codetheweb/muse.git",
   "author": "Max Isom <hi@maxisom.me>",
   "license": "MIT",
   "private": true,
   "types": "dts/types",
+  "type": "module",
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
   "files": [
     "dist",
     "dts"
   ],
   "scripts": {
     "lint": "eslint 'src/**/*.ts'",
-    "lint-fix": "eslint 'src/**/*.ts' --fix",
+    "lint:fix": "eslint 'src/**/*.ts' --fix",
     "clean": "rm -rf dist dts",
     "test": "npm run lint",
     "build": "tsc",
@@ -34,15 +38,15 @@
     "@types/spotify-web-api-node": "^5.0.2",
     "@types/validator": "^13.1.4",
     "@types/ws": "^7.4.4",
-    "@typescript-eslint/eslint-plugin": "^4.25.0",
-    "@typescript-eslint/parser": "^4.26.1",
-    "eslint": "^7.28.0",
-    "eslint-config-xo": "^0.35.0",
-    "eslint-config-xo-typescript": "^0.36.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
+    "eslint": "^7.32.0",
+    "eslint-config-xo": "^0.38.0",
+    "eslint-config-xo-typescript": "^0.44.0",
     "husky": "^4.3.8",
     "nodemon": "^2.0.7",
     "ts-node": "^9.1.1",
-    "typescript": "^4.3.4"
+    "typescript": "^4.4.3"
   },
   "eslintConfig": {
     "extends": [
@@ -84,13 +88,15 @@
     "node-emoji": "^1.10.0",
     "p-event": "^4.2.0",
     "p-limit": "^3.1.0",
+    "p-queue": "^7.1.0",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^5.22.4",
     "sequelize-typescript": "^1.1.0",
     "spotify-uri": "^2.2.0",
     "spotify-web-api-node": "^5.0.2",
     "sqlite3": "^5.0.2",
-    "youtube.ts": "^0.2.0",
-    "ytdl-core": "^4.9.1"
+    "youtube.ts": "^0.2.2",
+    "ytdl-core": "^4.9.1",
+    "ytsr": "^3.5.3"
   }
 }
