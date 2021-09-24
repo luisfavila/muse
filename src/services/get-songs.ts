@@ -18,8 +18,9 @@ import CacheProvider from './cache.js';
 
 type QueuedSongWithoutChannel = Except<QueuedSong, 'addedInChannelId'>;
 
-const ONE_HOUR_IN_SECONDS = 60 * 60;
-const ONE_MINUTE_IN_SECONDS = 1 * 60;
+const ONE_HOUR_IN_SECONDS = 3600;
+const ONE_DAY_IN_SECONDS = 24 * ONE_HOUR_IN_SECONDS;
+const ONE_MONTH_IN_SECONDS = 30 * ONE_DAY_IN_SECONDS;
 
 @injectable()
 export default class {
@@ -51,7 +52,7 @@ export default class {
           limit: 10,
         },
         {
-          expiresIn: ONE_HOUR_IN_SECONDS,
+          expiresIn: ONE_MONTH_IN_SECONDS,
         },
       ));
 
@@ -80,7 +81,7 @@ export default class {
         this.youtube.videos.get,
         cleanUrl(url),
         {
-          expiresIn: ONE_HOUR_IN_SECONDS,
+          expiresIn: ONE_MONTH_IN_SECONDS,
         },
       );
 
@@ -103,7 +104,7 @@ export default class {
       this.youtube.playlists.get,
       listId,
       {
-        expiresIn: ONE_MINUTE_IN_SECONDS,
+        expiresIn: ONE_DAY_IN_SECONDS,
       },
     );
 
@@ -128,7 +129,7 @@ export default class {
         listId,
         {maxResults: '50', pageToken: nextToken},
         {
-          expiresIn: ONE_MINUTE_IN_SECONDS,
+          expiresIn: ONE_DAY_IN_SECONDS,
         },
       );
 
@@ -154,7 +155,7 @@ export default class {
           ).json() as Promise<{items: VideoDetailsResponse[]}>,
           p,
           {
-            expiresIn: ONE_MINUTE_IN_SECONDS,
+            expiresIn: ONE_DAY_IN_SECONDS,
           },
         );
 
