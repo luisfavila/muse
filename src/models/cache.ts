@@ -7,7 +7,7 @@ export default class Cache extends Model<Cache> {
   @Column
   key!: string;
 
-  @Column(sequelize.BLOB)
+  @Column(sequelize.BLOB('medium'))
   value!: string;
 
   @Column
