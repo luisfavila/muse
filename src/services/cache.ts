@@ -1,3 +1,4 @@
+import {createHash} from 'crypto';
 import {injectable} from 'inversify';
 import {Cache} from '../models/index.js';
 import debug from '../utils/debug.js';
@@ -29,7 +30,8 @@ export default class CacheProvider {
       throw new Error(`Cache key ${key} is too short.`);
     }
 
-    const cachedResult = await Cache.findByPk(key);
+    const hash = createHash('sha256').update(key).digest('base64');
+    const cachedResult = await Cache.findByPk(hash);
 
     if (cachedResult) {
       if (new Date() < cachedResult.expiresAt) {
@@ -46,7 +48,7 @@ export default class CacheProvider {
 
     // Save result
     await Cache.upsert({
-      key,
+      key: hash,
       value: JSON.stringify(result),
       expiresAt: futureTimeToDate(expiresIn),
     });
