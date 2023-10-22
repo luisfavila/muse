@@ -1,3 +1,4 @@
+import {createHash} from 'crypto';
 import {injectable} from 'inversify';
 import {prisma} from '../utils/db.js';
 import debug from '../utils/debug.js';
@@ -20,7 +21,7 @@ export default class KeyValueCacheProvider {
 
     const functionArgs = options.slice(0, options.length - 1);
 
-    const {
+    let {
       key = JSON.stringify(functionArgs),
       expiresIn,
     } = options[options.length - 1] as Options;
@@ -29,6 +30,7 @@ export default class KeyValueCacheProvider {
       throw new Error(`Cache key ${key} is too short.`);
     }
 
+    key = createHash('sha256').update(key).digest('base64');
     const cachedResult = await prisma.keyValueCache.findUnique({
       where: {
         key,
