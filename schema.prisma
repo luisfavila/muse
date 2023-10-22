@@ -3,12 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model FileCache {
-  hash       String   @id
+  hash       String   @db.VarChar(255) @id
   bytes      Int
   accessedAt DateTime
   createdAt  DateTime @default(now())
@@ -16,15 +17,15 @@ model FileCache {
 }
 
 model KeyValueCache {
-  key       String   @id
-  value     String
+  key       String   @db.VarChar(255) @id
+  value     String   @db.Text
   expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Setting {
-  guildId                        String   @id
+  guildId                        String   @db.VarChar(255) @id
   playlistLimit                  Int      @default(50)
   secondsToWaitAfterQueueEmpties Int      @default(30)
   leaveIfNoListeners             Boolean  @default(true)
@@ -34,10 +35,10 @@ model Setting {
 
 model FavoriteQuery {
   id        Int      @id @default(autoincrement())
-  guildId   String
-  authorId  String
-  name      String
-  query     String
+  guildId   String   @db.VarChar(255)
+  authorId  String   @db.VarChar(255)
+  name      String   @db.VarChar(255)
+  query     String   @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
